@@ -11,6 +11,10 @@ you can use android studio or any supported ide, i am currently using with vscod
 4. you can use create an android emulator and link it to vscode, i am just hooking my phone up to it since that's easier for me.
 these were brief steps, if you run into issues or other things, feel free to update this doc after you figure it out. 
 
+
+##  Target of URI doesn’t exist ‘package:flutter/material.dart
+run `flutter packages get` and restart vscode
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
