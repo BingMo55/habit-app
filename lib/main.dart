@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_app/habit_add.dart';
 import 'package:habit_app/habit_template.dart';
 
 void main() {
@@ -11,8 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        home: buildHabits(),
+        initialRoute: "/",
+        routes: {
+          "/": (context) => buildHabits(),
+          "/addHabitScreen": (context) => add_habit_screen()
+        },
         debugShowCheckedModeBanner: false);
   }
 }
@@ -24,17 +28,19 @@ class buildHabits extends StatefulWidget {
 
 class _buildHabitState extends State<buildHabits> {
   //global variable for habits
-  TextEditingController habitName = new TextEditingController();
-  var datePreferences = {
-    "U": false,
-    "M": false,
-    "T": false,
-    "W": false,
-    "R": false,
-    "F": false,
-    "S": false,
-  };
-  String hName = "";
+  // TextEditingController habitName = new TextEditingController();
+
+  // var datePreferences = {
+  //   "U": false,
+  //   "M": false,
+  //   "T": false,
+  //   "W": false,
+  //   "R": false,
+  //   "F": false,
+  //   "S": false,
+  // };
+  // String hName = "";
+
   List<Habit> habitList = [
     Habit(
       name: "tes1",
@@ -46,23 +52,22 @@ class _buildHabitState extends State<buildHabits> {
     )
   ];
 
-  void resetDatePreferences() {
-    datePreferences["U"] = false;
-    datePreferences["M"] = false;
-    datePreferences["T"] = false;
-    datePreferences["W"] = false;
-    datePreferences["R"] = false;
-    datePreferences["F"] = false;
-    datePreferences["S"] = false;
-  }
+  // void resetDatePreferences() {
+  //   datePreferences["U"] = false;
+  //   datePreferences["M"] = false;
+  //   datePreferences["T"] = false;
+  //   datePreferences["W"] = false;
+  //   datePreferences["R"] = false;
+  //   datePreferences["F"] = false;
+  //   datePreferences["S"] = false;
+  // }
 
-  void _addHabit(String habitName) {
-    setState(() {
-      int index = habitList.length;
-      habitList.add(Habit(name: habitName, color: Colors.greenAccent));
-      Navigator.of(context).pop();
-    });
-  }
+  // void _addHabit(String habitName) {
+  //   setState(() {
+  //     int index = habitList.length;
+  //     habitList.add(Habit(name: habitName, color: Colors.greenAccent));
+  //   });
+  // }
 
   Widget _buildHabitList() {
     ///[todo] add padding to each of the list tiles.
@@ -76,8 +81,8 @@ class _buildHabitState extends State<buildHabits> {
   }
 
   String getDate(int weekdayNumber)
-  // date letter from
-  //https://eventguide.com/topics/one_digit_day_abbreviations.html
+  // // date letter from
+  // //https://eventguide.com/topics/one_digit_day_abbreviations.html
   {
     switch (weekdayNumber) {
       case 1:
@@ -95,65 +100,6 @@ class _buildHabitState extends State<buildHabits> {
       case 7:
         return "U";
     }
-  }
-
-  Widget createDateOptionButton() {
-    return Flexible(
-      child: IconButton(
-        icon: Icon(
-          Icons.more_vert,
-          color: Colors.grey,
-        ),
-        onPressed: () {
-          print("option clicked");
-        },
-      ),
-    );
-  }
-
-  Widget createDateSelectionButton(String date) {
-    Color colorB = Colors.transparent;
-    return Flexible(
-      child: SizedBox(
-        width: 30,
-        child: FlatButton(
-          padding: EdgeInsets.all(0),
-          // color: datePreferences[date] ? Colors.blueGrey : Colors.transparent,
-          color: colorB,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          onPressed: () {
-            setState(() {
-              print(datePreferences[date]);
-              datePreferences[date] = !datePreferences[date];
-              colorB = Colors.blueGrey;
-            });
-          },
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              date,
-              style: TextStyle(fontSize: 15),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget createDateSelectionContainer() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        createDateSelectionButton("U"),
-        createDateSelectionButton("M"),
-        createDateSelectionButton("T"),
-        createDateSelectionButton("W"),
-        createDateSelectionButton("R"),
-        createDateSelectionButton("F"),
-        createDateSelectionButton("S"),
-      ],
-    );
   }
 
   Widget createDateButton(DateTime date) {
@@ -177,6 +123,20 @@ class _buildHabitState extends State<buildHabits> {
     );
   }
 
+  Widget createDateOptionButton() {
+    return Flexible(
+      child: IconButton(
+        icon: Icon(
+          Icons.more_vert,
+          color: Colors.grey,
+        ),
+        onPressed: () {
+          print("option clicked");
+        },
+      ),
+    );
+  }
+
   Widget _buildDatesButton() {
     var today = DateTime.now();
 
@@ -193,45 +153,6 @@ class _buildHabitState extends State<buildHabits> {
     );
   }
 
-  Widget _textFieldForm() {
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: TextFormField(
-        controller: habitName,
-        decoration: const InputDecoration(
-            hintText: 'Habit Name', labelText: 'Habit Name'),
-      ),
-    );
-  }
-
-  Widget _cancelButtonWidget() {
-    return Padding(
-      padding: const EdgeInsets.all(0),
-      child: FlatButton(
-        child: Text("Cancel"),
-        onPressed: () {
-          Navigator.of(context).pop();
-          habitName.clear();
-          resetDatePreferences();
-        },
-      ),
-    );
-  }
-
-  Widget _submitButtonWidget() {
-    return Padding(
-      padding: const EdgeInsets.all(0),
-      child: FlatButton(
-        child: Text("Submit"),
-        onPressed: () {
-          _addHabit(habitName.text);
-          habitName.clear();
-          resetDatePreferences();
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -243,36 +164,19 @@ class _buildHabitState extends State<buildHabits> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    content: Stack(
-                      overflow: Overflow.visible,
-                      children: <Widget>[
-                        Form(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              _textFieldForm(),
-                              Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: createDateSelectionContainer()),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  _cancelButtonWidget(),
-                                  _submitButtonWidget()
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                });
+          onPressed: () async {
+            final habit_name =
+                await Navigator.pushNamed(context, "/addHabitScreen");
+
+            ///[todo] receiving data results in black screen, otherwise it will be fine
+            String habit = habit_name.toString();
+            print(habit);
+            if (habit != "") {
+              // _addHabit(habit);
+              setState(() {
+                habitList.add(Habit(name: habit, color: Colors.greenAccent));
+              });
+            }
           },
           tooltip: 'Add task',
           child: new Icon(Icons.add)),
